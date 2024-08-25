@@ -86,8 +86,8 @@ class Entity {
     addComponent(component_class, properties) {
         //const class_name = component_class.name;
         const component = new component_class(properties);
-        if (!component.name in this.ecs.components) {
-            console.error(`Component ${component} not registered with ECS`);
+        if (!(component.constructor.name in this.ecs.components)) {
+            throw new Error(`Component ${component} not registered with ECS`);
         }
         else {
             // add to components object and entity root with component name as key for easy access
@@ -206,3 +206,5 @@ class Query {
 }
 
 export { ECS, Entity, Component, System, Query, ECSEvent };
+
+
