@@ -102,7 +102,6 @@ class Entity {
     }
 
     removeComponent(component_class) {
-        console.log('removing component:', component_class, ' from entity:', this);
         if (component_class.name in this) {
             const component_name = component_class.name;
             delete this[component_name]; // remove from self
