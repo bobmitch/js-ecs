@@ -102,10 +102,22 @@ class Entity {
     }
 
     removeComponent(component_class) {
-        const component_name = component_class.name;
-        if (component_name in this.components) {
-            delete this.components[component_name];
-            delete this.ecs.components[component_name].entities[this.id];
+        console.log('removing component:', component_class, ' from entity:', this);
+        if (component_class.name in this) {
+            const component_name = component_class.name;
+            delete this[component_name]; // remove from self
+            delete this.components[component_name]; // remove from components object in self
+            delete this.ecs.components[component_name].entities[this.id]; // delete this entity from component entities list
+            // refresh queries that use this component
+            for (const query_name in this.ecs.queries) {
+                let query = this.ecs.queries[query_name];
+                if (query.component_names.includes(component_name)) {
+                    query.refresh();
+                }
+            }
+        }
+        else {
+            console.error(`Component ${component_name} not found in entity`);
         }
     }
 }
